@@ -1,0 +1,14 @@
+#categoryForm h2 {
+  line-height: 3rem;
+}
+
+#categoryForm input {
+  font-size: 1.1rem;
+  margin: 4px;
+  padding: 7px;
+  width: 300px;
+}
+
+.section {
+  margin-bottom: 30px;
+}

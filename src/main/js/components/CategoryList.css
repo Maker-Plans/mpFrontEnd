@@ -1,0 +1,5 @@
+.category-list {
+  flex: 0 0 300px;
+  padding: 20px;
+  border-right: 2px solid #ddd;
+}

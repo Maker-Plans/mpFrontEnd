@@ -1,0 +1,17 @@
+h1 {
+  margin-bottom: 30px;
+  color: #333;
+}
+
+p {
+  color: #444;
+}
+
+#description {
+  margin: 20px;
+  font-size: 1.1rem;
+}
+
+#description p {
+  line-height: 1.5rem;
+}
