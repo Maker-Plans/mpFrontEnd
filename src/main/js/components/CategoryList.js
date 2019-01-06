@@ -1,11 +1,16 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import CategoryListItem from "./CategoryListItem";
 
 import "./CategoryList.css";
 
-const CategoryList = props => {
-  if (props.categories.length === 0) {
+const mapStateToProps = state => {
+  return { categories: state.categories };
+};
+
+const CategoryList = ({ categories }) => {
+  if (categories.length === 0) {
     return (
       <div className="category-list">
         <p>No categories found</p>
@@ -14,7 +19,7 @@ const CategoryList = props => {
   } else {
     return (
       <div className="category-list">
-        {props.categories.map(category => (
+        {categories.map(category => (
           <CategoryListItem key={category.id} category={category} />
         ))}
       </div>
@@ -22,4 +27,4 @@ const CategoryList = props => {
   }
 };
 
-export default CategoryList;
+export default connect(mapStateToProps)(CategoryList);

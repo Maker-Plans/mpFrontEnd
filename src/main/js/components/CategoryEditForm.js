@@ -1,70 +1,88 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { createHashHistory } from 'history'
+
+import { addCategory } from "../actions/index";
 
 import "./CategoryEditForm.css";
 
+export const history = createHashHistory();
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addCategory: category => dispatch(addCategory(category))
+  };
+}
+
 class CategoryEditForm extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
-      currentCategory: {
         name: "",
         description: ""
-      }
     };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCancelEdit = this.handleCancelEdit.bind(this);
   }
 
-  componentDidMount() {
+  handleChange(event) {
+    this.setState({ [event.target.id]: event.target.value });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const { name, description } = this.state;
+    console.log("adding category " + name);
+    this.props.addCategory({ name, description });
     this.setState({
-      currentCategory: Object.assign(
-        {},
-        this.state.currentCategory,
-        this.props.contact
-      )
-    });
+            name: "",
+            description: ""
+        });
+  }
+
+  handleCancelEdit() {
+    this.setState({
+            name: "",
+            description: ""
+        });
+    history.push("/categories");
   }
 
   render() {
+    const { name, description } = this.state;
     return (
       <div>
-        <div className="toolbar">
-          <button onClick={this.props.onCancel}>Cancel</button>
-          <button onClick={() => this.props.onSave(this.state.currentCategory)}>
-            Save
-          </button>
-        </div>
-        <form id="categoryForm">
+        <form id="categoryForm" onSubmit={this.handleSubmit}>
+          <div className="toolbar">
+            <button onClick={this.handleCancelEdit}>
+               Cancel
+             </button>
+            <button type="submit" className="btn btn-success btn-lg">
+               Save
+            </button>
+          </div>
           <div className="section">
             <h2>Category Details</h2>
             <div>
               <input
                 type="text"
-                value={this.state.currentCategory.name}
-                onChange={event =>
-                  this.setState({
-                    currentCategory: {
-                      ...this.state.currentCategory,
-                      name: event.target.value
-                    }
-                  })
-                }
+                value={name}
+                onChange={this.handleChange}
                 placeholder="Name"
                 name="name"
+                id="name"
               />
             </div>
             <div>
               <textarea
-                value={this.state.currentCategory.description}
-                onChange={event =>
-                  this.setState({
-                    currentCategory: {
-                      ...this.state.currentCategory,
-                      description: event.target.value
-                    }
-                  })
-                }
+                value={description}
+                onChange={this.handleChange}
                 placeholder="Description"
                 name="description"
+                id="description"
              />
             </div>
           </div>
@@ -74,4 +92,4 @@ class CategoryEditForm extends Component {
   }
 }
 
-export default CategoryEditForm;
+export default connect(null, mapDispatchToProps)(CategoryEditForm);

@@ -9,11 +9,7 @@ const NewCategory = props => {
 
   return (
     <div id="newCategory">
-      <CategoryEditForm
-        category={newCategory}
-        onCancel={props.onCancel}
-        onSave={props.onSave}
-      />
+      <CategoryEditForm />
     </div>
   );
 };

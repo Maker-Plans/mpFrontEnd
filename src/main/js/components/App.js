@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import { addCategory } from "../actions/index";
+import { Switch, Route } from "react-router-dom";
 import { withRouter } from "react-router";
 import { createHashHistory } from 'history'
 
-import "./app.css";
+import "./App.css";
 
-import * as categoryApi from "./api/category";
+import * as categoryApi from "../api/category";
 
-import Header from "./components/Header";
-import Home from "./pages/Home";
-import Categories from "./pages/Categories";
-import NewCategory from "./pages/NewCategory";
+import Header from "./Header";
+import Home from "../pages/Home";
+import Categories from "../pages/Categories";
+import NewCategory from "../pages/NewCategory";
 
 export const history = createHashHistory()
 
@@ -106,15 +107,10 @@ class App extends Component {
                                 />
                             )}
                         />
-
                         <Route
                             path="/new-category"
                             render={props => (
-                                <NewCategory
-                                    onSave={this.createNewCategory}
-                                    onCancel={this.handleCancelEdit}
-                                    {...props}
-                                />
+                                <NewCategory />
                             )}
                         />
                     </Switch>
@@ -126,10 +122,3 @@ class App extends Component {
 
 const AppWithRouter = withRouter(App);
 export default AppWithRouter;
-
-ReactDOM.render(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>,
-    document.getElementById("react")
-);

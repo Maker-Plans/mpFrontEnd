@@ -7,7 +7,7 @@ const CategoryListItem = props => {
   const category = props.category;
   return (
     <div className="category-list-item">
-      <NavLink to={`/category/${category.id}`} activeClassName="activeLink">
+      <NavLink to={`/categories/${category.id}`} activeClassName="activeLink">
         {`${category.name}`}
       </NavLink>
     </div>
