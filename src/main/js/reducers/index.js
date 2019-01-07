@@ -1,8 +1,12 @@
-import { ADD_CATEGORY, INVALID_INPUT  } from "../constants/action-types";
+import { ADD_CATEGORY
+       , CATEGORY_DATA_LOADED
+       , API_CALL_IN_PROGRESS
+       , API_CALL_SUCCESS
+       , API_CALL_FAILED
+       , INVALID_INPUT} from "../constants/action-types";
 
 const initialState = {
   categories: [],
-  remoteCategories: [],
   error: ""
 };
 
@@ -18,9 +22,10 @@ function rootReducer(state = initialState, action) {
       error: "Invalid value for " + action.payload.field
     });
   }
-  if (action.type === "DATA_LOADED") {
+  if (action.type === CATEGORY_DATA_LOADED) {
     return Object.assign({}, state, {
-      remoteCategories: state.remoteCategories.concat(action.payload)
+      categories: state.categories.concat(action.payload),
+      error: ""
     });
   }
   return state;

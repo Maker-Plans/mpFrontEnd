@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getCategoryData } from "../actions/index";
+
+import { getCategoryData } from "../actions/categoryActions";
 
 import CategoryListItem from "./CategoryListItem";
 
@@ -9,7 +10,7 @@ import "./CategoryList.css";
 
 function mapStateToProps(state) {
   return {
-    categories: state.remoteCategories
+    categories: state.categories
   };
 }
 
@@ -18,7 +19,9 @@ class CategoryList extends Component {
     super();
   }
   componentDidMount() {
-    this.props.getCategoryData();
+    if (this.props.categories.length === 0) {
+        this.props.getCategoryData();
+    }
   }
   render() {
     if (this.props.categories.length === 0) {

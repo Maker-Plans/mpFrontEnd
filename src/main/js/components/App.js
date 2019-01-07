@@ -1,13 +1,10 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import { addCategory } from "../actions/index";
 import { Switch, Route } from "react-router-dom";
 import { withRouter } from "react-router";
 import { createHashHistory } from 'history'
 
 import "./App.css";
-
-import * as categoryApi from "../api/category";
 
 import Header from "./Header";
 import Home from "../pages/Home";
@@ -31,10 +28,6 @@ class App extends Component {
     this.handleDeleteCategory = this.handleDeleteCategory.bind(this);
     this.createNewCategory = this.createNewCategory.bind(this);
   }
-
-	componentDidMount() {
-	    categoryApi.getCategoriesForArticle().then(response => this.setState({ categories: response.data.categories }));
-	}
 
   handleEditCategory(category) {
     this.setState({ editedCategory: category.id });

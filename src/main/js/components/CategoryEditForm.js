@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createHashHistory } from 'history'
 
-import { addCategory } from "../actions/index";
+import { addCategory } from "../actions/categoryActions";
 
 import "./CategoryEditForm.css";
 
