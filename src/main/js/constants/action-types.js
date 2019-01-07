@@ -1,1 +1,3 @@
 export const ADD_CATEGORY = "ADD_CATEGORY";
+
+export const INVALID_INPUT = "INVALID_INPUT";
