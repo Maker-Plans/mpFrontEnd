@@ -8,7 +8,9 @@ export function getCategoryData() {
     };
 }
 
-export function addCategory(payload) {
+export function addCategory(category) {
     // TODO: call the createCategory or updateCategory on the category API.
-    return { type: ADD_CATEGORY, payload }
+    return function(dispatch) {
+        return categoryAPI.addCategory(dispatch, category);
+    };
 };

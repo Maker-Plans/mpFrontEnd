@@ -19,9 +19,7 @@ class CategoryList extends Component {
     super();
   }
   componentDidMount() {
-    if (this.props.categories.length === 0) {
-        this.props.getCategoryData();
-    }
+    this.props.getCategoryData();
   }
   render() {
     if (this.props.categories.length === 0) {

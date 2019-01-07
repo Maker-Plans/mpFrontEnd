@@ -24,7 +24,7 @@ function rootReducer(state = initialState, action) {
   }
   if (action.type === CATEGORY_DATA_LOADED) {
     return Object.assign({}, state, {
-      categories: state.categories.concat(action.payload),
+      categories: action.payload,
       error: ""
     });
   }
