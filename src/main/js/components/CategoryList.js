@@ -2,7 +2,7 @@ import { CATEGORY_SCHEMA } from '../constants/normalizr-constants';
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {Treebeard} from 'react-treebeard';
+import {Treebeard, decorators} from 'react-treebeard';
 import { denormalize, schema } from 'normalizr';
 
 import { getCategoryData } from "../actions/categoryActions";
@@ -26,46 +26,24 @@ function mapStateToProps(state) {
     }
 }
 
-  const decorators = {
-      Loading: (props) => {
-      console.log("Loading", props);
-          return (
-              <div style={props.style}>
-                  loading...
-              </div>
-          );
-      },
-      Toggle: (props) => {
-      console.log("Toggle", props);
-          return (
-              <div style={props.style}>
-                  <svg height={props.height} width={props.width}>
-                      // Vector Toggle Here
-                  </svg>
-              </div>
-          );
-      },
-      Header: ({node, style}) => {
-          return (
-              <div>
-                  {node.name}
-              </div>
-          );
-      },
-      Container: (props) => {
-        const {decorators, terminal, onClick, node} = props;
-          return (
-              <div className="category-list-item">
-                  <decorators.Header node={node}  style={style.header}/>
-              </div>
-          );
-      }
-  };
-
 class CategoryList extends Component {
-  constructor() {
-    super();
-  }
+    constructor(){
+        super();
+        this.state = {};
+        this.onToggle = this.onToggle.bind(this);
+    }
+    onToggle(node, toggled){
+        const {cursor} = this.state;
+        if (cursor) {
+            cursor.active = false;
+        }
+        node.active = true;
+        if (node.children) {
+            node.toggled = toggled;
+        }
+
+        this.setState({cursor: node});
+    }
 
   componentDidMount() {
     this.props.getCategoryData();
@@ -79,11 +57,11 @@ class CategoryList extends Component {
           </div>
         );
     } else {
-    console.log(this.props.categories.categories);
         return (
           <div className="category-list">
             <Treebeard
               data={this.props.categories.categories}
+              onToggle={this.onToggle}
               decorators={decorators}
             />
           </div>
