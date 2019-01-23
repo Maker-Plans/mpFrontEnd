@@ -1,6 +1,9 @@
+import { CATEGORY_SCHEMA } from '../constants/normalizr-constants';
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {Treebeard} from 'react-treebeard';
+import { denormalize, schema } from 'normalizr';
 
 import { getCategoryData } from "../actions/categoryActions";
 
@@ -11,9 +14,16 @@ import "./CategoryListItem.css";
 
 
 function mapStateToProps(state) {
-  return {
-    categories: state.categories
-  };
+    if (state.categories.result != undefined) {
+        console.log("result: ", state.categories.result.categories);
+        return {
+            categories: denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities)
+        };
+    } else {
+        return {
+            categories: []
+        };
+    }
 }
 
   const decorators = {
@@ -69,11 +79,11 @@ class CategoryList extends Component {
           </div>
         );
     } else {
-    console.log(this.props.categories);
+    console.log(this.props.categories.categories);
         return (
           <div className="category-list">
             <Treebeard
-              data={this.props.categories}
+              data={this.props.categories.categories}
               decorators={decorators}
             />
           </div>

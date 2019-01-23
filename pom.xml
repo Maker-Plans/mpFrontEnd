@@ -52,7 +52,7 @@
                         </goals>
                         <configuration>
                             <nodeVersion>v10.11.0</nodeVersion>
-                            <npmVersion>6.4.1</npmVersion>
+                            <npmVersion>6.6.0</npmVersion>
                         </configuration>
                     </execution>
                     <execution>

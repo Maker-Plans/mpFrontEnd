@@ -14,12 +14,13 @@ export function getCategoryData(dispatch) {
     return axios.get(`${ROOT_URL}?api-key=${API_KEY}&categoryType=ARTICLE`)
         .then(function(response) {
             dispatch({ type: API_CALL_SUCCESS });
+            console.log("API_CALL_SUCCESS", response.data.categories)
             dispatch({ type: CATEGORY_DATA_LOADED, payload: response.data.categories });
         })
         .catch(error => {
             // TODO: Introduce proper error handling
             dispatch({ type: API_CALL_FAILED });
-            console.log(error.response)
+            console.log("API_CALL_FAILED", error.response)
         })
     ;
 }

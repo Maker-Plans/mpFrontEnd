@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import rootReducer from "../reducers/index";
 import { validateCategory } from "../middleware/CategoryValidator";
 import thunk from "redux-thunk";
