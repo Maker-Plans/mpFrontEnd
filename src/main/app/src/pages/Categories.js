@@ -35,7 +35,7 @@ class Categories extends Component {
                 category={this.state.displayCategory}
                 editCategoryDetails={this.editCategoryDetails} />
         );
-    }
+    };
 
     render() {
         return (

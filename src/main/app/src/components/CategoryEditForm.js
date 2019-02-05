@@ -32,7 +32,7 @@ class CategoryEditForm extends Component {
 
     handleChange = (event) => {
         this.setState({ [event.target.id]: event.target.value });
-    }
+    };
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -47,7 +47,7 @@ class CategoryEditForm extends Component {
             });
         }
         this.setState({ });
-    }
+    };
 
     handleCancelEdit = () => {
         this.setState({
@@ -55,7 +55,7 @@ class CategoryEditForm extends Component {
             description: '',
         });
         history.push('/categories');
-    }
+    };
 
     render() {
         const { name, description } = this.state;
