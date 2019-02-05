@@ -24,7 +24,8 @@ function rootReducer(state = initialState, action) {
         });
     }
     if (action.type === CATEGORY_DATA_LOADED) {
-        console.log('payload:', action.payload);
+        console.log('normalizing:', { categories: action.payload });
+        console.log('with', CATEGORY_SCHEMA);
         return Object.assign({}, state, {
             categories: normalize({ categories: action.payload }, CATEGORY_SCHEMA),
             error: '',

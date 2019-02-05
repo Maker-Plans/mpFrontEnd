@@ -1,47 +1,55 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createHashHistory } from 'history';
+import { denormalize } from 'normalizr';
 
 import { addCategory } from '../actions/categoryActions';
+import { CATEGORY_SCHEMA } from '../constants/normalizr-constants';
 
 export const history = createHashHistory();
 
-function mapDispatchToProps(dispatch) {
-    return {
-        addCategory: category => dispatch(addCategory(category)),
-    };
+function mapStateToProps(state) {
+    if (state.categories.result !== undefined) {
+        return {
+            categoryTree: denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities),
+            categories: state.categories.result,
+        };
+    }
+    return {};
 }
 
 class CategoryEditForm extends Component {
-    constructor() {
-        super();
 
+    constructor(props) {
+        super(props);
         this.state = {
-            name: '',
-            description: '',
+            id: props.category.id,
+            name: props.category.name,
+            description: props.category.description,
+            parentCategoryId: props.category.parentCategoryId,
         };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleCancelEdit = this.handleCancelEdit.bind(this);
     }
 
-    handleChange(event) {
+    handleChange = (event) => {
         this.setState({ [event.target.id]: event.target.value });
     }
 
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.preventDefault();
-        const { name, description } = this.state;
-        console.log(`adding category ${name}`);
-        this.props.addCategory({ name, description });
-        this.setState({
-            name: '',
-            description: '',
-        });
+        const { id, name, description, parentCategoryId } = this.state;
+        if (id) {
+            console.log(`updating category ${name}`);
+            // updateCategory();
+        } else {
+            console.log(`adding category ${name}`);
+            this.props.addCategory({
+                id, name, description, parentCategoryId,
+            });
+        }
+        this.setState({ });
     }
 
-    handleCancelEdit() {
+    handleCancelEdit = () => {
         this.setState({
             name: '',
             description: '',
@@ -56,10 +64,10 @@ class CategoryEditForm extends Component {
                 <form id="categoryForm" onSubmit={this.handleSubmit}>
                     <div className="toolbar">
                         <button onClick={this.handleCancelEdit}>
-               Cancel
+                            Cancel
                         </button>
                         <button type="submit" className="btn btn-success btn-lg">
-               Save
+                            Save
                         </button>
                     </div>
                     <div className="section">
@@ -88,4 +96,9 @@ class CategoryEditForm extends Component {
     }
 }
 
-export default connect(null, mapDispatchToProps)(CategoryEditForm);
+export default connect(
+    mapStateToProps,
+    {
+        addCategory,
+    },
+)(CategoryEditForm);

@@ -11,31 +11,45 @@ const { TreeNode } = Tree;
 
 function mapStateToProps(state) {
     if (state.categories.result !== undefined) {
-        console.log('categories loaded:', state.categories);
         return {
             categories: denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities),
         };
     }
-    return {
-    };
+    return {};
 }
 
 class CategoryList extends Component {
+    state = {
+        expandedKeys: [],
+        autoExpandParent: true,
+        selectedKeys: [],
+    };
+
     componentDidMount() {
         this.props.getCategoryData();
     }
 
-    onSelect(selectedKeys, info) {
-        console.log('selected', selectedKeys, info);
+    onExpand = (expandedKeys) => {
+        // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+        // or, you can remove all expanded children keys.
+        this.setState({
+            expandedKeys,
+            autoExpandParent: false,
+        });
+    };
+
+    onSelect = (selectedKeys, info) => {
         this.setState({ selectedKeys });
-    }
+        console.log('info', info.node.props);
+        this.props.displayCategoryDetails(info.node.props.dataRef);
+    };
 
     renderTreeNodes(data) {
         return data.map((item) => {
-            if (item.children) {
+            if (item.categories) {
                 return (
                     <TreeNode title={item.name} key={item.id} dataRef={item}>
-                        {this.renderTreeNodes(item.children)}
+                        {this.renderTreeNodes(item.categories)}
                     </TreeNode>
                 );
             }
@@ -46,7 +60,12 @@ class CategoryList extends Component {
     render() {
         if (this.props.categories && this.props.categories.categories && this.props.categories.categories.length) {
             return (
-                <Tree loadData={this.onLoadData}>
+                <Tree
+                    onExpand={this.onExpand}
+                    expandedKeys={this.state.expandedKeys}
+                    autoExpandParent={this.state.autoExpandParent}
+                    onSelect={this.onSelect}
+                    selectedKeys={this.state.selectedKeys}>
                     {this.renderTreeNodes(this.props.categories.categories)}
                 </Tree>
             );
@@ -56,6 +75,8 @@ class CategoryList extends Component {
 }
 
 export default connect(
-  mapStateToProps,
-  { getCategoryData },
+    mapStateToProps,
+    {
+        getCategoryData,
+    },
 )(CategoryList);

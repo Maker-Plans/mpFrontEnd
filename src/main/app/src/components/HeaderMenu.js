@@ -9,7 +9,6 @@ const HeaderMenu = () => (
         defaultSelectedKeys={['home']}
         style={{ lineHeight: '64px' }}>
         <Menu.Item key="home"><Link to="/">MakerPlans</Link></Menu.Item>
-        <Menu.Item key="newCategoryLink"><Link to="/new-category">+ New Category</Link></Menu.Item>
         <Menu.Item key="categories"><Link to="/categories">Categories</Link></Menu.Item>
     </Menu>
 );

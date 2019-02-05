@@ -1,8 +1,9 @@
 import { schema } from 'normalizr';
 
-export const CATEGORY = new schema.Entity('categories');
-export const SUB_CATEGORY = new schema.Entity('children');
-export const CHILDREN = new schema.Array({ SUB_CATEGORY });
-CATEGORY.define({ CHILDREN });
+const categoryScheme = new schema.Entity('categories');
+categoryScheme.define({ categories: [categoryScheme] });
 
-export const CATEGORY_SCHEMA = { categories: [CATEGORY] };
+const CATEGORY_SCHEMA = { categories: [categoryScheme] };
+
+export { CATEGORY_SCHEMA };
+
