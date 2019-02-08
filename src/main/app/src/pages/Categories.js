@@ -42,7 +42,8 @@ class Categories extends Component {
         return (
             <CategoryDetailView
                 category={this.state.displayCategory}
-                editCategoryDetails={this.editCategoryDetails} />
+                editCategoryDetails={this.editCategoryDetails}
+                cancelEdit={this.cancelEdit} />
         );
     };
 

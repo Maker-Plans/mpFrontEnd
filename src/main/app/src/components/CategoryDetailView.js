@@ -1,26 +1,47 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Button } from 'antd';
+import { connect } from 'react-redux';
+import { deleteCategory } from '../actions/categoryActions';
 
-const CategoryDetailView = (props) => {
-    const category = props.category;
-    if (category) {
-        return (
-            <div id="detailView">
-                <div className="toolbar">
-                    {/* <button onClick={() => props.onDelete(category.id)}>Delete</button> */}
-                    <button onClick={() => props.editCategoryDetails()}>Edit</button>
-                </div>
-                <h1>
-                    {category.name}
-                </h1>
-                <div id="description">
-                    <p>
-                        {category.description}
-                    </p>
-                </div>
-            </div>
-        );
+function mapStateToProps() {
+    return {};
+}
+
+class CategoryDetailView extends Component {
+
+    onDelete = (categoryId) => {
+        this.props.deleteCategory(categoryId);
+        this.props.cancelEdit(null);
     }
-    return 'Please select a category';
-};
 
-export default CategoryDetailView;
+
+    render() {
+        const category = this.props.category;
+        if (category) {
+            return (
+                <div id="detailView">
+                    <div className="toolbar">
+                        <Button type="primary" onClick={() => this.onDelete(category.id)}>Delete</Button>
+                        <Button type="primary" onClick={() => this.props.editCategoryDetails()}>Edit</Button>
+                    </div>
+                    <h1>
+                        {category.name}
+                    </h1>
+                    <div id="description">
+                        <p>
+                            {category.description}
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+        return 'Please select a category';
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    {
+        deleteCategory,
+    },
+)(CategoryDetailView);

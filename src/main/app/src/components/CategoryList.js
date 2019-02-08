@@ -62,7 +62,9 @@ class CategoryList extends Component {
             console.log('treeData', this.props.categories);
             return (
                 <div>
-                    <Button type="primary" onClick={this.props.createNewCategory} disabled={this.props.editCategory}>New</Button>
+                    <div>
+                        <Button type="primary" onClick={this.props.createNewCategory} disabled={this.props.editCategory}>New</Button>
+                    </div>
                     <Tree
                         onExpand={this.onExpand}
                         expandedKeys={this.state.expandedKeys}

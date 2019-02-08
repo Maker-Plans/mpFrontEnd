@@ -17,3 +17,9 @@ export function updateCategory(category) {
         return categoryAPI.updateCategory(dispatch, category);
     };
 }
+
+export function deleteCategory(categoryId) {
+    return function (dispatch) {
+        return categoryAPI.deleteCategory(dispatch, categoryId);
+    };
+}
