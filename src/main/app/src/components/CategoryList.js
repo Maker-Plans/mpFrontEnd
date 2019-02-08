@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Tree } from 'antd';
+import { Tree, Button } from 'antd';
 import { denormalize } from 'normalizr';
 
 import { CATEGORY_SCHEMA } from '../constants/normalizr-constants';
@@ -40,7 +40,6 @@ class CategoryList extends Component {
 
     onSelect = (selectedKeys, info) => {
         this.setState({ selectedKeys });
-        console.log('info', info.node.props);
         this.props.displayCategoryDetails(info.node.props.dataRef);
     };
 
@@ -60,14 +59,17 @@ class CategoryList extends Component {
     render() {
         if (this.props.categories && this.props.categories.categories && this.props.categories.categories.length) {
             return (
-                <Tree
-                    onExpand={this.onExpand}
-                    expandedKeys={this.state.expandedKeys}
-                    autoExpandParent={this.state.autoExpandParent}
-                    onSelect={this.onSelect}
-                    selectedKeys={this.state.selectedKeys}>
-                    {this.renderTreeNodes(this.props.categories.categories)}
-                </Tree>
+                <div>
+                    <Button type="primary" onClick={this.props.createNewCategory}>New</Button>
+                    <Tree
+                        onExpand={this.onExpand}
+                        expandedKeys={this.state.expandedKeys}
+                        autoExpandParent={this.state.autoExpandParent}
+                        onSelect={this.onSelect}
+                        selectedKeys={this.state.selectedKeys}>
+                        {this.renderTreeNodes(this.props.categories.categories)}
+                    </Tree>
+                </div>
             );
         }
         return 'loading tree';

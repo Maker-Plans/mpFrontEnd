@@ -22,12 +22,21 @@ class CategoryEditForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            id: props.category.id,
-            name: props.category.name,
-            description: props.category.description,
-            parentCategoryId: props.category.parentCategoryId,
-        };
+        if (props.category) {
+            this.state = {
+                id: props.category.id,
+                name: props.category.name,
+                description: props.category.description,
+                parentCategoryId: props.category.parentCategoryId,
+            };
+        } else {
+            this.state = {
+                id: null,
+                name: '',
+                description: '',
+                parentCategoryId: null,
+            };
+        }
     }
 
     handleChange = (event) => {

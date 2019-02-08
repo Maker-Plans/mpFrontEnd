@@ -15,10 +15,17 @@ class Categories extends Component {
     };
 
     displayCategoryDetails = (category) => {
+        console.log('displayCategoryDetails');
         this.setState({ displayCategory: category, editCategory: false });
     };
 
+    createNewCategory = () => {
+        console.log('createNewCategory');
+        this.setState({ editCategory: true });
+    };
+
     editCategoryDetails = () => {
+        console.log('editCategoryDetails');
         this.setState({ editCategory: true });
     };
 
@@ -41,7 +48,9 @@ class Categories extends Component {
         return (
             <Layout>
                 <Sider theme="light">
-                    <CategoryList displayCategoryDetails={this.displayCategoryDetails} />
+                    <CategoryList
+                        displayCategoryDetails={this.displayCategoryDetails}
+                        createNewCategory={this.createNewCategory} />
                 </Sider>
                 <Content style={{ minHeight: 280 }}>
                     {this.DisplayOrEdit()}
