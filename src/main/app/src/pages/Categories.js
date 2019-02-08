@@ -15,18 +15,19 @@ class Categories extends Component {
     };
 
     displayCategoryDetails = (category) => {
-        console.log('displayCategoryDetails');
         this.setState({ displayCategory: category, editCategory: false });
     };
 
     createNewCategory = () => {
-        console.log('createNewCategory');
-        this.setState({ editCategory: true });
+        this.setState({ displayCategory: null, editCategory: true });
     };
 
     editCategoryDetails = () => {
-        console.log('editCategoryDetails');
         this.setState({ editCategory: true });
+    };
+
+    cancelEdit = (category) => {
+        this.setState({ displayCategory: category, editCategory: false });
     };
 
     DisplayOrEdit = () => {
@@ -34,7 +35,8 @@ class Categories extends Component {
             console.log('editing', this.state.displayCategory);
             return (
                 <CategoryEditForm
-                    category={this.state.displayCategory} />
+                    category={this.state.displayCategory}
+                    cancelEdit={this.cancelEdit} />
             );
         }
         return (
@@ -49,6 +51,7 @@ class Categories extends Component {
             <Layout>
                 <Sider theme="light">
                     <CategoryList
+                        editCategory={this.state.editCategory}
                         displayCategoryDetails={this.displayCategoryDetails}
                         createNewCategory={this.createNewCategory} />
                 </Sider>

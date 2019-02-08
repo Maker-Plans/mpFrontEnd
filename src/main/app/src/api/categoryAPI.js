@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { ADD_CATEGORY
+        , UPDATE_CATEGORY
         , CATEGORY_DATA_LOADED
         , API_CALL_IN_PROGRESS
         , API_CALL_SUCCESS
@@ -14,22 +15,21 @@ export function getCategoryData(dispatch) {
     return axios.get(`${ROOT_URL}?api-key=${API_KEY}&categoryType=ARTICLE`)
         .then((response) => {
             dispatch({ type: API_CALL_SUCCESS });
-            console.log('API_CALL_SUCCESS', response.data.categories);
             dispatch({ type: CATEGORY_DATA_LOADED, payload: response.data.categories });
         })
         .catch((error) => {
             // TODO: Introduce proper error handling
-            dispatch({ type: API_CALL_FAILED });
-            console.log('API_CALL_FAILED', error.response);
+            dispatch({ type: API_CALL_FAILED, payload: error });
         })
     ;
 }
 
 export function addCategory(dispatch, category) {
     dispatch({ type: API_CALL_IN_PROGRESS });
-    const data = { ...category, categoryType: 'ARTICLE' };
- //   category.categoryType = 'ARTICLE';
-    console.log(category);
+    let data = { ...category };
+    if (data.parentCategoryId === undefined) {
+        data = { ...category, categoryType: 'ARTICLE' };
+    }
     return axios.post(`${ROOT_URL}?api-key=${API_KEY}`, data)
         .then((response) => {
             dispatch({ type: API_CALL_SUCCESS });
@@ -37,8 +37,26 @@ export function addCategory(dispatch, category) {
         })
         .catch((error) => {
             // TODO: Introduce proper error handling
-            dispatch({ type: API_CALL_FAILED });
-            console.log(error.response);
+            dispatch({ type: API_CALL_FAILED, payload: error });
         })
-    ;
+        ;
+}
+
+export function updateCategory(dispatch, category) {
+    dispatch({ type: API_CALL_IN_PROGRESS });
+    let data = { ...category };
+    if (data.parentCategoryId === undefined) {
+        data = { ...category, categoryType: 'ARTICLE' };
+    }
+    return axios.put(`${ROOT_URL}/${category.id}?api-key=${API_KEY}`, data)
+        .then((response) => {
+            console.log('response', response);
+            dispatch({ type: API_CALL_SUCCESS });
+            dispatch({ type: UPDATE_CATEGORY, payload: response.data.category });
+        })
+        .catch((error) => {
+            // TODO: Introduce proper error handling
+            dispatch({ type: API_CALL_FAILED, payload: error });
+        })
+        ;
 }

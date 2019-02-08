@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createHashHistory } from 'history';
 import { denormalize } from 'normalizr';
 
-import { addCategory } from '../actions/categoryActions';
+import { addCategory, updateCategory } from '../actions/categoryActions';
 import { CATEGORY_SCHEMA } from '../constants/normalizr-constants';
-
-export const history = createHashHistory();
 
 function mapStateToProps(state) {
     if (state.categories.result !== undefined) {
@@ -48,7 +45,9 @@ class CategoryEditForm extends Component {
         const { id, name, description, parentCategoryId } = this.state;
         if (id) {
             console.log(`updating category ${name}`);
-            // updateCategory();
+            this.props.updateCategory({
+                id, name, description, parentCategoryId,
+            });
         } else {
             console.log(`adding category ${name}`);
             this.props.addCategory({
@@ -56,14 +55,17 @@ class CategoryEditForm extends Component {
             });
         }
         this.setState({ });
+        this.props.cancelEdit({
+            id, name, description, parentCategoryId,
+        });
     };
 
     handleCancelEdit = () => {
-        this.setState({
-            name: '',
-            description: '',
+        const { id, name, description, parentCategoryId } = this.state;
+        this.setState({ });
+        this.props.cancelEdit({
+            id, name, description, parentCategoryId,
         });
-        history.push('/categories');
     };
 
     render() {
@@ -109,5 +111,6 @@ export default connect(
     mapStateToProps,
     {
         addCategory,
+        updateCategory,
     },
 )(CategoryEditForm);
