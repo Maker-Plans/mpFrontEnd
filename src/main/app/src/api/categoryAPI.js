@@ -17,8 +17,12 @@ export function getCategoryData(dispatch) {
     dispatch({ type: API_CALL_IN_PROGRESS });
     return axios.get(`${ROOT_URL}?api-key=${API_KEY}&categoryType=ARTICLE`)
         .then((response) => {
-            dispatch({ type: API_CALL_SUCCESS });
-            dispatch({ type: CATEGORY_DATA_LOADED, payload: response.data.categories });
+            if (response.data.responseCode === 200) {
+                dispatch({ type: API_CALL_SUCCESS });
+                dispatch({ type: CATEGORY_DATA_LOADED, payload: response.data.categories });
+            } else {
+                dispatch({ type: API_CALL_FAILED, payload: response.data.message });
+            }
         })
         .catch((error) => {
             // TODO: Introduce proper error handling
@@ -35,8 +39,12 @@ export function addCategory(dispatch, category) {
     }
     return axios.post(`${ROOT_URL}?api-key=${API_KEY}`, data)
         .then((response) => {
-            dispatch({ type: API_CALL_SUCCESS });
-            dispatch({ type: ADD_CATEGORY, payload: response.data.category });
+            if (response.data.responseCode === 201) {
+                dispatch({ type: API_CALL_SUCCESS });
+                dispatch({ type: ADD_CATEGORY, payload: response.data.category });
+            } else {
+                dispatch({ type: API_CALL_FAILED, payload: response.data.message });
+            }
         })
         .catch((error) => {
             // TODO: Introduce proper error handling
@@ -53,9 +61,12 @@ export function updateCategory(dispatch, category) {
     }
     return axios.put(`${ROOT_URL}/${category.id}?api-key=${API_KEY}`, data)
         .then((response) => {
-            console.log('response', response);
-            dispatch({ type: API_CALL_SUCCESS });
-            dispatch({ type: UPDATE_CATEGORY, payload: response.data.category });
+            if (response.data.responseCode === 301) {
+                dispatch({ type: API_CALL_SUCCESS });
+                dispatch({ type: UPDATE_CATEGORY, payload: response.data.category });
+            } else {
+                dispatch({ type: API_CALL_FAILED, payload: response.data.message });
+            }
         })
         .catch((error) => {
             // TODO: Introduce proper error handling
@@ -68,13 +79,14 @@ export function deleteCategory(dispatch, categoryId) {
     dispatch({ type: API_CALL_IN_PROGRESS });
     return axios.delete(`${ROOT_URL}/${categoryId}?api-key=${API_KEY}`)
         .then((response) => {
-            console.log('response', response);
-            console.log('removed', categoryId);
-            dispatch({ type: API_CALL_SUCCESS });
-            dispatch({ type: DELETE_CATEGORY, payload: categoryId });
+            if (response.data.responseCode === 410) {
+                dispatch({ type: API_CALL_SUCCESS });
+                dispatch({ type: DELETE_CATEGORY, payload: categoryId });
+            } else {
+                dispatch({ type: API_CALL_FAILED, payload: response.data.message });
+            }
         })
         .catch((error) => {
-            // TODO: Introduce proper error handling
             dispatch({ type: API_CALL_FAILED, payload: error });
         })
         ;

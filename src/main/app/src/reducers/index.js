@@ -63,7 +63,6 @@ function rootReducer(state = initialState, action) {
         });
     }
     if (action.type === DELETE_CATEGORY) {
-        console.log('cleaning', action.payload);
         const entities = { ...state.categories.entities };
         const oldCategory = entities.categories[action.payload];
         const result = { ...state.categories.result };
@@ -82,8 +81,6 @@ function rootReducer(state = initialState, action) {
         });
     }
     if (action.type === CATEGORY_DATA_LOADED) {
-        console.log('normalizing:', { categories: action.payload });
-        console.log('with', CATEGORY_SCHEMA);
         return Object.assign({}, state, {
             categories: normalize({ categories: action.payload }, CATEGORY_SCHEMA),
             error: '',
@@ -95,7 +92,6 @@ function rootReducer(state = initialState, action) {
         });
     }
     if (action.type === API_CALL_FAILED) {
-        console.log(API_CALL_FAILED, action.payload);
         return Object.assign({}, state, {
             error: action.payload,
         });

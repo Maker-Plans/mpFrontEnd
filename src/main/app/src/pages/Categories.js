@@ -32,7 +32,6 @@ class Categories extends Component {
 
     DisplayOrEdit = () => {
         if (this.state.editCategory) {
-            console.log('editing', this.state.displayCategory);
             return (
                 <CategoryEditForm
                     category={this.state.displayCategory}

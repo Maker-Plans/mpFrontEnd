@@ -44,12 +44,10 @@ class CategoryEditForm extends Component {
         event.preventDefault();
         const { id, name, description, parentCategoryId } = this.state;
         if (id) {
-            console.log(`updating category ${name}`);
             this.props.updateCategory({
                 id, name, description, parentCategoryId,
             });
         } else {
-            console.log(`adding category ${name}`);
             this.props.addCategory({
                 id, name, description, parentCategoryId,
             });

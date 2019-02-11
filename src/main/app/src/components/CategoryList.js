@@ -11,7 +11,6 @@ const { TreeNode } = Tree;
 
 function mapStateToProps(state) {
     if (state.categories.result !== undefined) {
-        console.log('categories', state.categories);
         return {
             categories: denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities),
         };
@@ -59,7 +58,6 @@ class CategoryList extends Component {
 
     render() {
         if (this.props.categories && this.props.categories.categories && this.props.categories.categories.length) {
-            console.log('treeData', this.props.categories);
             return (
                 <div>
                     <div>
