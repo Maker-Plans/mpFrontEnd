@@ -89,10 +89,7 @@ class CategoryEditForm extends Component {
         return <TreeSelect.TreeNode {...item} title={item.name} key={item.id} value={item.id} dataRef={item} />;
     });
 
-    handleSelectParentCategory = (value, label, extra) => {
-        console.log('value', value);
-        console.log('label', label);
-        console.log('extra', extra);
+    handleSelectParentCategory = (value) => {
         this.setState({
             ...this.state,
             parentCategoryId: value,
