@@ -48,7 +48,7 @@
         "webpack-dev-server": "^2.4.5"
     },
     "scripts": {
-        "start": "node scripts/start.js",
+        "start": "node %NODE_DEBUG_OPTION% scripts/start.js",
         "build": "export NODE_ENV=production && rm -rf ./build && webpack --env.production --optimize-minimize"
     },
     "proxy": "http://localhost:8082/apis"

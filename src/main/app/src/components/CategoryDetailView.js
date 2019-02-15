@@ -12,7 +12,6 @@ function mapStateToProps(state) {
     return {};
 }
 
-
 class CategoryDetailView extends Component {
 
     onDelete = (categoryId) => {
@@ -21,22 +20,14 @@ class CategoryDetailView extends Component {
     };
 
     createBreadcrumbTrail = (category) => {
-        console.log('category', category);
         const categories = this.props.categories.categories;
-        console.log('props', this.props);
-        console.log('categories', categories);
         let crumbTrail = [];
         let cat = category;
         while (cat && cat.parentCategoryId) {
             cat = categories[cat.parentCategoryId];
-            console.log('adding to crumbTrail', cat);
             crumbTrail = crumbTrail.concat(cat);
         }
-        if (crumbTrail && crumbTrail.length > 0) {
-            console.log('returning', crumbTrail);
-            return crumbTrail;
-        }
-        return null;
+        return crumbTrail && crumbTrail.length > 0 ? crumbTrail : null;
     };
 
     itemRender = category => (<span>{category.name}</span>);
@@ -45,12 +36,11 @@ class CategoryDetailView extends Component {
         const category = this.props.category;
         if (category) {
             const breadcrumbTrail = this.createBreadcrumbTrail(category);
-            console.log('breadcrumbTrail', breadcrumbTrail);
             return (
                 <div id="detailView">
                     <div className="toolbar">
-                        <Button type="primary" onClick={() => this.onDelete(category.id)}>Delete</Button>
-                        <Button type="primary" onClick={() => this.props.editCategoryDetails()}>Edit</Button>
+                        <Button type="danger" onClick={() => this.onDelete(category.id)} className="button">Delete</Button>
+                        <Button type="primary" onClick={() => this.props.editCategoryDetails()} className="button">Edit</Button>
                     </div>
                     {breadcrumbTrail &&
                     <Breadcrumb itemRender={this.itemRender} routes={breadcrumbTrail} />

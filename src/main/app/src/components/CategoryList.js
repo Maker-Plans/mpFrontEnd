@@ -61,7 +61,7 @@ class CategoryList extends Component {
             return (
                 <div>
                     <div>
-                        <Button type="primary" onClick={this.props.createNewCategory} disabled={this.props.editCategory}>New</Button>
+                        <Button type="primary" onClick={this.props.createNewCategory} disabled={this.props.editCategory} className="button">New</Button>
                     </div>
                     <Tree
                         onExpand={this.onExpand}

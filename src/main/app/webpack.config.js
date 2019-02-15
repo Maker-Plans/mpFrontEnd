@@ -1,38 +1,37 @@
-'use strict';
-var path = require('path');
-var fs = require('fs');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
-var autoprefixer = require('autoprefixer');
-var lessToJs = require('less-vars-to-js');
+const path = require('path');
+const fs = require('fs');
+const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+const autoprefixer = require('autoprefixer');
+const lessToJs = require('less-vars-to-js');
 
-var themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, './ant-theme-vars.less'), 'utf8'));
+const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, './ant-theme-vars.less'), 'utf8'));
 
 module.exports = function (env) {
     const isProduction = env && env.production === true;
 
     return {
-        context: path.resolve(__dirname, "src"),
+        context: path.resolve(__dirname, 'src'),
         entry: './index.js',
         output: {
             path: path.resolve(__dirname, 'build'),
             publicPath: '/',
-            filename: 'static/js/[name].[hash].js'
+            filename: 'static/js/[name].[hash].js',
         },
 
         module: {
             rules: [
                 {
-                    enforce: "pre",
+                    enforce: 'pre',
                     test: /\.js$/,
                     include: path.resolve(__dirname, 'src'),
-                    loader: "eslint-loader",
+                    loader: 'eslint-loader',
                     options: {
                         failOnError: true,
-                        fix: true
-                    }
+                        fix: true,
+                    },
                 },
                 {
                     test: /\.(js|jsx)$/,
@@ -49,36 +48,37 @@ module.exports = function (env) {
                     use: [{
                         loader: 'babel-loader',
                         options: {
-                            presets: ["@babel/preset-env", "@babel/preset-react", {
-                                'plugins': ['@babel/plugin-proposal-class-properties']
+                            presets: ['@babel/preset-env', '@babel/preset-react', {
+                                plugins: ['@babel/plugin-proposal-class-properties'],
                             }],
                             plugins: [
-                                ['import', {libraryName: "antd", style: true}]
-                            ]
-                        }
-                    }]
+                                ['import', { libraryName: 'antd', style: true }],
+                            ],
+                        },
+                    }],
                 },
                 {
                     test: /\.less$/,
                     use: [
-                        {loader: "style-loader"},
-                        {loader: "css-loader"},
+                        { loader: 'style-loader' },
+                        { loader: 'css-loader' },
                         {
-                            loader: "less-loader",
+                            loader: 'less-loader',
                             options: {
                                 modifyVars: themeVariables,
-                                javascriptEnabled: true
-                            }
-                        }
-                    ]
+                                javascriptEnabled: true,
+                            },
+                        },
+                    ],
                 },
                 {
                     test: /\.css$/,
                     loader: isProduction ?
                         ExtractTextPlugin.extract({
-                            fallback: 'style-loader', use: [
+                            fallback: 'style-loader',
+                            use: [
                                 {
-                                    loader: require.resolve('css-loader')
+                                    loader: require.resolve('css-loader'),
                                 },
                                 {
                                     loader: require.resolve('postcss-loader'),
@@ -96,27 +96,27 @@ module.exports = function (env) {
                                             }),
                                         ],
                                     },
-                                }
-                            ]
+                                },
+                            ],
                         }) :
-                        ['style-loader', 'css-loader',]
+                        ['style-loader', 'css-loader'],
                 },
                 {
                     test: /\.json$/,
-                    loader: 'json-loader'
+                    loader: 'json-loader',
                 },
                 {
                     test: /\.svg$/,
                     loader: 'file-loader',
                     query: {
-                        name: 'static/media/[name].[hash:8].[ext]'
-                    }
-                }
-            ]
+                        name: 'static/media/[name].[hash:8].[ext]',
+                    },
+                },
+            ],
         },
         plugins: [
             new InterpolateHtmlPlugin({
-                PUBLIC_URL: ''
+                PUBLIC_URL: '',
             }),
             new HtmlWebpackPlugin({
                 inject: true,
@@ -131,39 +131,40 @@ module.exports = function (env) {
                     keepClosingSlash: true,
                     minifyJS: true,
                     minifyCSS: true,
-                    minifyURLs: true
-                }
+                    minifyURLs: true,
+                },
             }),
             new ExtractTextPlugin('static/css/[name].[hash].css'),
             new webpack.HotModuleReplacementPlugin(),
             new webpack.DefinePlugin({
-                'SERVICE_URL': isProduction ?
-                    JSON.stringify("http://pro.example.com") :
-                    JSON.stringify("http://dev.example.com"),
-                "process.env": {
+                SERVICE_URL: isProduction ?
+                    JSON.stringify('http://pro.example.com') :
+                    JSON.stringify('http://dev.example.com'),
+                'process.env': {
                     NODE_ENV: isProduction ?
-                        JSON.stringify("production") :
-                        JSON.stringify("development")
-                }
-            })
+                        JSON.stringify('production') :
+                        JSON.stringify('development'),
+                },
+            }),
         ],
         devServer: {
             hot: true,
-            contentBase: path.join(__dirname, "public"),
+            contentBase: path.join(__dirname, 'public'),
             compress: true,
             port: 9000,
             publicPath: '/',
+            historyApiFallback: true,
             proxy: {
                 '/api/**': {
                     target: 'http://localhost:8082/',
-                    pathRewrite: {'^/api': '/apis'},
+                    pathRewrite: { '^/api': '/apis' },
                     secure: false,
-                    logLevel: 'debug'
-                }
-            }
+                    logLevel: 'debug',
+                },
+            },
         },
         devtool: isProduction ?
             'hidden-source-map' :
             'cheap-module-eval-source-map',
     };
-}
+};
