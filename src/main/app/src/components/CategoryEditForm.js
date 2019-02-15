@@ -64,9 +64,13 @@ class CategoryEditForm extends Component {
     handleCancelEdit = () => {
         const { id, name, description, parentCategoryId } = this.state;
         this.setState({});
-        this.props.cancelEdit({
-            id, name, description, parentCategoryId,
-        });
+        if (id) {
+            this.props.cancelEdit({
+                id, name, description, parentCategoryId,
+            });
+        } else {
+            this.props.cancelEdit(undefined);
+        }
     };
 
     renderTreeNodes = data => data.map((item) => {
@@ -107,6 +111,7 @@ class CategoryEditForm extends Component {
                     </div>
                     <div className="section">
                         <h2>Category Details</h2>
+                        {this.props.categoryTree.categories &&
                         <div>
                             <label htmlFor="parentCategory">Parent category</label>
                             <TreeSelect
@@ -120,6 +125,7 @@ class CategoryEditForm extends Component {
                                 {this.renderTreeNodes(this.props.categoryTree.categories)}
                             </TreeSelect>
                         </div>
+                        }
                         <div>
                             <label htmlFor="name">Name</label>
                             <Input

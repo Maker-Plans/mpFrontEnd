@@ -14,7 +14,6 @@ const initialState = {
     error: '',
 };
 
-
 function rootReducer(state = initialState, action) {
     if (action.type === ADD_CATEGORY) {
         return addCategory(state, action);

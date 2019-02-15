@@ -30,20 +30,35 @@ class CategoryDetailView extends Component {
         return crumbTrail && crumbTrail.length > 0 ? crumbTrail : null;
     };
 
-    itemRender = category => (<span>{category.name}</span>);
+    itemRender = data => (
+        data.map(category => (
+            <Breadcrumb.Item key={category.id}>
+                <span>{category.name}</span>
+            </Breadcrumb.Item>
+        ))
+    );
 
     render() {
         const category = this.props.category;
+
         if (category) {
             const breadcrumbTrail = this.createBreadcrumbTrail(category);
             return (
                 <div id="detailView">
                     <div className="toolbar">
-                        <Button type="danger" onClick={() => this.onDelete(category.id)} className="button">Delete</Button>
-                        <Button type="primary" onClick={() => this.props.editCategoryDetails()} className="button">Edit</Button>
+                        <Button
+                            type="danger"
+                            onClick={() => this.onDelete(category.id)}
+                            className="button">Delete</Button>
+                        <Button
+                            type="primary"
+                            onClick={() => this.props.editCategoryDetails()}
+                            className="button">Edit</Button>
                     </div>
                     {breadcrumbTrail &&
-                    <Breadcrumb itemRender={this.itemRender} routes={breadcrumbTrail} />
+                    <Breadcrumb>
+                        {this.itemRender(breadcrumbTrail)}
+                    </Breadcrumb>
                     }
                     <h1>
                         {category.name}

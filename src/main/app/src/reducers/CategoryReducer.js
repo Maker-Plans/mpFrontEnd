@@ -67,7 +67,12 @@ export function loadCategories(state, action) {
 export function addCategory(state, action) {
     const entities = { ...state.categories.entities };
     const result = { ...state.categories.result };
-    if (action.payload.parentCategoryId === undefined) {
+    if (entities.categories === undefined) {
+        // starting with an empty tree, adding the first item
+        result.categories = [action.payload.id];
+        entities.categories = [];
+        entities.categories[action.payload.id] = action.payload;
+    } else if (action.payload.parentCategoryId === undefined) {
         result.categories = result.categories.concat(action.payload.id);
     } else {
         if (entities.categories[action.payload.parentCategoryId].categories === undefined) {

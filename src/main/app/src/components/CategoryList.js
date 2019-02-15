@@ -74,7 +74,14 @@ class CategoryList extends Component {
                 </div>
             );
         }
-        return 'loading tree';
+        return (
+            <div>
+                <div>
+                    <Button type="primary" onClick={this.props.createNewCategory} disabled={this.props.editCategory} className="button">New</Button>
+                </div>
+                loading tree
+            </div>
+        );
     }
 }
 
