@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Tree, Button } from 'antd';
 import { denormalize } from 'normalizr';
 
@@ -10,6 +11,7 @@ import { getCategoryData } from '../actions/categoryActions';
 const { TreeNode } = Tree;
 
 function mapStateToProps(state) {
+    console.log('categories', state.categories);
     if (state.categories.result !== undefined) {
         return {
             categories: denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities),
@@ -20,39 +22,41 @@ function mapStateToProps(state) {
 
 class CategoryList extends Component {
     state = {
-        expandedKeys: [],
         autoExpandParent: true,
-        selectedKeys: [],
     };
 
     componentDidMount() {
         this.props.getCategoryData();
     }
 
-    onExpand = (expandedKeys) => {
+    onExpand = () => {
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
         // or, you can remove all expanded children keys.
         this.setState({
-            expandedKeys,
             autoExpandParent: false,
         });
-    };
-
-    onSelect = (selectedKeys, info) => {
-        this.setState({ selectedKeys });
-        this.props.displayCategoryDetails(info.node.props.dataRef);
     };
 
     renderTreeNodes(data) {
         return data.map((item) => {
             if (item.categories) {
+                if (this.props.editCategory) {
+                    return (
+                        <TreeNode title={item.name} key={item.id} dataRef={item}>
+                            {this.renderTreeNodes(item.categories)}
+                        </TreeNode>
+                    );
+                }
                 return (
-                    <TreeNode title={item.name} key={item.id} dataRef={item}>
+                    <TreeNode title={<Link to={`/categories/${item.id}`}>{item.name}</Link>} key={item.id} dataRef={item}>
                         {this.renderTreeNodes(item.categories)}
                     </TreeNode>
                 );
             }
-            return <TreeNode {...item} title={item.name} key={item.id} dataRef={item} />;
+            if (this.props.editCategory) {
+                return <TreeNode {...item} title={item.name} key={item.id} dataRef={item} />;
+            }
+            return <TreeNode {...item} title={<Link to={`/categories/${item.id}`}>{item.name}</Link>} key={item.id} dataRef={item} />;
         });
     }
 
@@ -61,14 +65,14 @@ class CategoryList extends Component {
             return (
                 <div>
                     <div>
-                        <Button type="primary" onClick={this.props.createNewCategory} disabled={this.props.editCategory} className="button">New</Button>
+                        <Button type="primary" onClick={this.props.createCategory} disabled={this.props.editCategory} className="button">New</Button>
                     </div>
                     <Tree
+                        disabled={this.props.editCategory}
                         onExpand={this.onExpand}
-                        expandedKeys={this.state.expandedKeys}
+                        expandedKeys={[this.props.categoryId]}
                         autoExpandParent={this.state.autoExpandParent}
-                        onSelect={this.onSelect}
-                        selectedKeys={this.state.selectedKeys}>
+                        selectedKeys={[this.props.categoryId]}>
                         {this.renderTreeNodes(this.props.categories.categories)}
                     </Tree>
                 </div>
@@ -77,7 +81,7 @@ class CategoryList extends Component {
         return (
             <div>
                 <div>
-                    <Button type="primary" onClick={this.props.createNewCategory} disabled={this.props.editCategory} className="button">New</Button>
+                    <Button type="primary" onClick={this.props.createCategory} disabled={this.props.editCategory} className="button">New</Button>
                 </div>
                 loading tree
             </div>

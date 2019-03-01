@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Breadcrumb, Button } from 'antd';
+import { Button } from 'antd';
 import { connect } from 'react-redux';
 import { deleteCategory } from '../actions/categoryActions';
+import CategoryCrumbtrail from './categoryCrumbtrail';
+import ArticleList from './ArticleList';
 
 function mapStateToProps(state) {
     if (state.categories.entities !== undefined) {
@@ -16,33 +18,12 @@ class CategoryDetailView extends Component {
 
     onDelete = (categoryId) => {
         this.props.deleteCategory(categoryId);
-        this.props.cancelEdit(null);
+        this.props.cancelEdit();
     };
-
-    createBreadcrumbTrail = (category) => {
-        const categories = this.props.categories.categories;
-        let crumbTrail = [];
-        let cat = category;
-        while (cat && cat.parentCategoryId) {
-            cat = categories[cat.parentCategoryId];
-            crumbTrail = crumbTrail.concat(cat);
-        }
-        return crumbTrail && crumbTrail.length > 0 ? crumbTrail : null;
-    };
-
-    itemRender = data => (
-        data.map(category => (
-            <Breadcrumb.Item key={category.id}>
-                <span>{category.name}</span>
-            </Breadcrumb.Item>
-        ))
-    );
 
     render() {
-        const category = this.props.category;
-
-        if (category) {
-            const breadcrumbTrail = this.createBreadcrumbTrail(category);
+        if (this.props.categoryId && this.props.categories) {
+            const category = this.props.categories.categories[this.props.categoryId];
             return (
                 <div id="detailView">
                     <div className="toolbar">
@@ -52,14 +33,13 @@ class CategoryDetailView extends Component {
                             className="button">Delete</Button>
                         <Button
                             type="primary"
-                            onClick={() => this.props.editCategoryDetails()}
+                            onClick={() => this.props.editCategory()}
                             className="button">Edit</Button>
+                        <Button
+                            type="default"
+                            className="button">Add Article</Button>
                     </div>
-                    {breadcrumbTrail &&
-                    <Breadcrumb>
-                        {this.itemRender(breadcrumbTrail)}
-                    </Breadcrumb>
-                    }
+                    <CategoryCrumbtrail category={category} />
                     <h1>
                         {category.name}
                     </h1>
@@ -68,6 +48,7 @@ class CategoryDetailView extends Component {
                             {category.description}
                         </p>
                     </div>
+                    <ArticleList categoryId={category.id} />
                 </div>
             );
         }

@@ -3,13 +3,11 @@ import { connect } from 'react-redux';
 import { denormalize } from 'normalizr';
 import { Button, Input, TreeSelect } from 'antd';
 
-import { addCategory, updateCategory } from '../actions/categoryActions';
 import { CATEGORY_SCHEMA } from '../constants/normalizr-constants';
+import { addArticle, updateArticle } from '../actions/articleActions';
 
 function mapStateToProps(state) {
-    console.log('categories', state.categories);
-    if (state.categories.result !== undefined) {
-        console.log('tree', denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities));
+    if (state.categories.entities !== undefined) {
         return {
             categoryTree: denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities),
             categories: state.categories.entities,
@@ -18,29 +16,25 @@ function mapStateToProps(state) {
     return {};
 }
 
-class CategoryEditForm extends Component {
+class ArticleEditForm extends Component {
 
     constructor(props) {
         super(props);
-        let category;
-        if (props.categoryId && this.props.categories) {
-            category = this.props.categories.categories[this.props.categoryId];
-        }
-        if (category) {
+        if (props.article) {
             this.state = {
-                id: category.id,
-                name: category.name,
-                description: category.description,
-                parentCategoryId: category.parentCategoryId,
-                parentCategory: undefined,
+                id: props.article.id,
+                name: props.article.name,
+                description: props.article.description,
+                categoryId: props.article.categoryId,
+                category: undefined,
             };
         } else {
             this.state = {
                 id: null,
                 name: '',
                 description: '',
-                parentCategoryId: undefined,
-                parentCategory: undefined,
+                categoryId: undefined,
+                category: undefined,
             };
         }
     }
@@ -51,20 +45,32 @@ class CategoryEditForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const { id, name, description, parentCategoryId } = this.state;
+        const { id, name, description, categoryId } = this.state;
         if (id) {
-            this.props.updateCategory({
-                id, name, description, parentCategoryId,
+            this.props.updateArticle({
+                id, name, description, categoryId,
             });
         } else {
-            this.props.addCategory({
-                id, name, description, parentCategoryId,
+            this.props.addArticle({
+                id, name, description, categoryId,
             });
         }
         this.setState({});
-        this.props.cancelCategoryEdit({
-            id, name, description, parentCategoryId,
+        this.props.cancelArticleEdit({
+            id, name, description, categoryId,
         });
+    };
+
+    handleCancelEdit = () => {
+        const { id, name, description, categoryId } = this.state;
+        this.setState({});
+        if (id) {
+            this.props.cancelArticleEdit({
+                id, name, description, categoryId,
+            });
+        } else {
+            this.props.cancelArticleEdit(undefined);
+        }
     };
 
     renderTreeNodes = data => data.map((item) => {
@@ -87,43 +93,41 @@ class CategoryEditForm extends Component {
         return <TreeSelect.TreeNode {...item} title={item.name} key={item.id} value={item.id} dataRef={item} />;
     });
 
-    handleSelectParentCategory = (value) => {
+    handleSelectCategory = (value) => {
         this.setState({
             ...this.state,
-            parentCategoryId: value,
+            categoryId: value,
         });
     };
 
     render() {
-        const { name, description, parentCategoryId } = this.state;
+        const { name, description, categoryId } = this.state;
         return (
             <div>
                 <form id="categoryForm" onSubmit={this.handleSubmit}>
                     <div className="toolbar">
-                        <Button type="default" onClick={this.props.cancelEdit} className="button">Cancel</Button>
+                        <Button type="default" onClick={this.handleCancelEdit} className="button">Cancel</Button>
                         <Button type="primary" onClick={this.handleSubmit} className="button">Save</Button>
                     </div>
                     <div className="section">
-                        <h2>Category Details</h2>
-                        {this.props.categoryTree.categories &&
+                        <h2>Article Details</h2>
                         <div>
-                            <label htmlFor="parentCategory">Parent category</label>
+                            <label htmlFor="category">Category</label>
                             <TreeSelect
                                 style={{ width: 300 }}
-                                value={parentCategoryId}
+                                value={categoryId}
                                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                                placeholder="Please select a parent category"
+                                placeholder="Please select a category"
                                 allowClear
                                 treeDefaultExpandAll
-                                onChange={this.handleSelectParentCategory}>
+                                onChange={this.handleSelectCategory}>
                                 {this.renderTreeNodes(this.props.categoryTree.categories)}
                             </TreeSelect>
                         </div>
-                        }
                         <div>
                             <label htmlFor="name">Name</label>
                             <Input
-                                placeholder="Category name"
+                                placeholder="Article name"
                                 type="text"
                                 value={name}
                                 onChange={this.handleChange}
@@ -135,7 +139,7 @@ class CategoryEditForm extends Component {
                             <Input.TextArea
                                 value={description}
                                 onChange={this.handleChange}
-                                placeholder="Category description"
+                                placeholder="Article description"
                                 name="description"
                                 id="description" />
                         </div>
@@ -149,7 +153,7 @@ class CategoryEditForm extends Component {
 export default connect(
     mapStateToProps,
     {
-        addCategory,
-        updateCategory,
+        addArticle,
+        updateArticle,
     },
-)(CategoryEditForm);
+)(ArticleEditForm);

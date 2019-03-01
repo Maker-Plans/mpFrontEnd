@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Layout } from 'antd';
+import { matchPath } from 'react-router';
 
 import CategoryList from '../components/CategoryList';
 import CategoryDetailView from '../components/CategoryDetailView';
@@ -9,54 +10,78 @@ const { Sider, Content } = Layout;
 
 class Categories extends Component {
 
-    state = {
-        displayCategory: null,
-        editCategory: false,
+    constructor(props) {
+        super(props);
+        this.state = {
+            createCategory: false,
+            editCategory: false,
+        };
+        console.log(this.state);
+    }
+
+    createCategory = () => {
+        this.setState({
+            createCategory: true,
+            editCategory: false,
+        });
+    }
+
+    editCategory = () => {
+        this.setState({
+            createCategory: false,
+            editCategory: true,
+        });
     };
 
-    displayCategoryDetails = (category) => {
-        this.setState({ displayCategory: category, editCategory: false });
+    cancelEdit = () => {
+        this.setState({
+            createCategory: false,
+            editCategory: false,
+        });
     };
 
-    createNewCategory = () => {
-        this.setState({ displayCategory: null, editCategory: true });
-    };
-
-    editCategoryDetails = () => {
-        this.setState({ editCategory: true });
-    };
-
-    cancelEdit = (category) => {
-        this.setState({ displayCategory: category, editCategory: false });
-    };
-
-    DisplayOrEdit = () => {
+    DisplayOrEdit = (categoryId) => {
+        if (this.state.createCategory) {
+            return (
+                <CategoryEditForm
+                    cancelEdit={this.cancelEdit} />
+            );
+        }
         if (this.state.editCategory) {
             return (
                 <CategoryEditForm
-                    category={this.state.displayCategory}
+                    categoryId={categoryId}
                     cancelEdit={this.cancelEdit} />
             );
         }
         return (
             <CategoryDetailView
-                category={this.state.displayCategory}
-                editCategoryDetails={this.editCategoryDetails}
-                cancelEdit={this.cancelEdit} />
+                categoryId={categoryId}
+                cancelEdit={this.cancelEdit}
+                editCategory={this.editCategory} />
         );
     };
 
     render() {
+        const match = matchPath(this.props.history.location.pathname, {
+            path: '/categories/:id',
+            exact: true,
+            strict: false,
+        });
+        let categoryId;
+        if (match) {
+            categoryId = match.params.id;
+        }
         return (
             <Layout>
                 <Sider theme="light">
                     <CategoryList
-                        editCategory={this.state.editCategory}
-                        displayCategoryDetails={this.displayCategoryDetails}
-                        createNewCategory={this.createNewCategory} />
+                        categoryId={categoryId}
+                        createCategory={this.createCategory}
+                        editCategory={this.state.createCategory || this.state.editCategory} />
                 </Sider>
                 <Content style={{ minHeight: 280 }}>
-                    {this.DisplayOrEdit()}
+                    {this.DisplayOrEdit(categoryId)}
                 </Content>
             </Layout>
         );

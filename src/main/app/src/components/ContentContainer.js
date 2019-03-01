@@ -8,6 +8,7 @@ const ContentContainer = () => (
     <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/categories" component={Categories} />
+        <Route path="/categories/:id" component={Categories} />
     </Switch>
 );
 
