@@ -62,9 +62,7 @@ class CategoryEditForm extends Component {
             });
         }
         this.setState({});
-        this.props.cancelCategoryEdit({
-            id, name, description, parentCategoryId,
-        });
+        this.props.cancelEdit();
     };
 
     renderTreeNodes = data => data.map((item) => {

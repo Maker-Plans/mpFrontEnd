@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Button } from 'antd';
 import { connect } from 'react-redux';
 import { deleteCategory } from '../actions/categoryActions';
@@ -18,7 +19,7 @@ class CategoryDetailView extends Component {
 
     onDelete = (categoryId) => {
         this.props.deleteCategory(categoryId);
-        this.props.cancelEdit();
+        this.props.history.push('/categories');
     };
 
     render() {
@@ -56,9 +57,9 @@ class CategoryDetailView extends Component {
     }
 }
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     {
         deleteCategory,
     },
-)(CategoryDetailView);
+)(CategoryDetailView));
