@@ -7,9 +7,7 @@ import { addCategory, updateCategory } from '../actions/categoryActions';
 import { CATEGORY_SCHEMA } from '../constants/normalizr-constants';
 
 function mapStateToProps(state) {
-    console.log('categories', state.categories);
     if (state.categories.result !== undefined) {
-        console.log('tree', denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities));
         return {
             categoryTree: denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities),
             categories: state.categories.entities,

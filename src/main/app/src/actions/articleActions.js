@@ -23,3 +23,9 @@ export function deleteArticle(articleId) {
         return articleAPI.deleteArticle(dispatch, articleId);
     };
 }
+
+export function likeArticle(article) {
+    return function (dispatch) {
+        return articleAPI.likeArticle(dispatch, article);
+    };
+}

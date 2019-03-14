@@ -7,6 +7,7 @@ import {
     API_CALL_SUCCESS,
     ARTICLE_DATA_LOADED,
     DELETE_ARTICLE,
+    LIKE_ARTICLE,
     UPDATE_ARTICLE,
 } from '../constants/action-types';
 
@@ -15,8 +16,10 @@ const ROOT_URL = '/api/content/article';
 
 export function getArticleData(dispatch, categoryId) {
     dispatch({ type: API_CALL_IN_PROGRESS });
+    console.log('calling load article with ', categoryId);
     return axios.get(`${ROOT_URL}?api-key=${API_KEY}&categoryId=${categoryId}`)
         .then((response) => {
+            console.log('response', response.data);
             if (response.data.responseCode === 200) {
                 dispatch({ type: API_CALL_SUCCESS });
                 dispatch({ type: ARTICLE_DATA_LOADED, payload: { categoryId, articles: response.data.articles } });
@@ -32,7 +35,6 @@ export function getArticleData(dispatch, categoryId) {
 
 export function addArticle(dispatch, article) {
     dispatch({ type: API_CALL_IN_PROGRESS });
-    console.log('adding article', article);
     return axios.post(`${ROOT_URL}?api-key=${API_KEY}`, { ...article })
         .then((response) => {
             if (response.data.responseCode === 201) {
@@ -54,7 +56,7 @@ export function updateArticle(dispatch, article) {
         .then((response) => {
             if (response.data.responseCode === 301) {
                 dispatch({ type: API_CALL_SUCCESS });
-                dispatch({ type: UPDATE_ARTICLE, payload: response.data.article });
+                dispatch({ type: UPDATE_ARTICLE, payload: { oldArticle: article, newArticle: response.data.article } });
             } else {
                 dispatch({ type: API_CALL_FAILED, payload: response.data.message });
             }
@@ -72,6 +74,23 @@ export function deleteArticle(dispatch, articleId) {
             if (response.data.responseCode === 410) {
                 dispatch({ type: API_CALL_SUCCESS });
                 dispatch({ type: DELETE_ARTICLE, payload: articleId });
+            } else {
+                dispatch({ type: API_CALL_FAILED, payload: response.data.message });
+            }
+        })
+        .catch((error) => {
+            dispatch({ type: API_CALL_FAILED, payload: error });
+        })
+        ;
+}
+
+export function likeArticle(dispatch, article) {
+    dispatch({ type: API_CALL_IN_PROGRESS });
+    return axios.put(`${ROOT_URL}/like/${article.id}?api-key=${API_KEY}`)
+        .then((response) => {
+            if (response.data.responseCode === 200) {
+                dispatch({ type: API_CALL_SUCCESS });
+                dispatch({ type: LIKE_ARTICLE, payload: response.data.article });
             } else {
                 dispatch({ type: API_CALL_FAILED, payload: response.data.message });
             }

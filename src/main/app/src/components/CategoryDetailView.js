@@ -7,12 +7,9 @@ import CategoryCrumbtrail from './categoryCrumbtrail';
 import ArticleList from './ArticleList';
 
 function mapStateToProps(state) {
-    if (state.categories.entities !== undefined) {
-        return {
-            categories: state.categories.entities,
-        };
-    }
-    return {};
+    return {
+        categories: state.categories.entities,
+    };
 }
 
 class CategoryDetailView extends Component {
@@ -38,6 +35,9 @@ class CategoryDetailView extends Component {
                             className="button">Edit</Button>
                         <Button
                             type="default"
+                            onClick={() => {
+                                this.props.history.push(`/articles/${this.props.categoryId}`);
+                            }}
                             className="button">Add Article</Button>
                     </div>
                     <CategoryCrumbtrail category={category} />

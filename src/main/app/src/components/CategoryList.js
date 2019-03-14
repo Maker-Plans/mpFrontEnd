@@ -11,7 +11,6 @@ import { getCategoryData } from '../actions/categoryActions';
 const { TreeNode } = Tree;
 
 function mapStateToProps(state) {
-    console.log('categories', state.categories);
     if (state.categories.result !== undefined) {
         return {
             categories: denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities),
@@ -26,7 +25,9 @@ class CategoryList extends Component {
     };
 
     componentDidMount() {
-        this.props.getCategoryData();
+        if (this.props.categories === undefined) {
+            this.props.getCategoryData();
+        }
     }
 
     onExpand = () => {
@@ -40,7 +41,7 @@ class CategoryList extends Component {
     renderTreeNodes(data) {
         return data.map((item) => {
             if (item.categories) {
-                if (this.props.editCategory) {
+                if (this.props.disabled) {
                     return (
                         <TreeNode title={item.name} key={item.id} dataRef={item}>
                             {this.renderTreeNodes(item.categories)}
@@ -53,7 +54,7 @@ class CategoryList extends Component {
                     </TreeNode>
                 );
             }
-            if (this.props.editCategory) {
+            if (this.props.disabled) {
                 return <TreeNode {...item} title={item.name} key={item.id} dataRef={item} />;
             }
             return <TreeNode {...item} title={<Link to={`/categories/${item.id}`}>{item.name}</Link>} key={item.id} dataRef={item} />;
@@ -65,10 +66,10 @@ class CategoryList extends Component {
             return (
                 <div>
                     <div>
-                        <Button type="primary" onClick={this.props.createCategory} disabled={this.props.editCategory} className="button">New</Button>
+                        <Button type="primary" htmlType="button" onClick={this.props.createCategory} disabled={this.props.disabled} className="button">New</Button>
                     </div>
                     <Tree
-                        disabled={this.props.editCategory}
+                        disabled={this.props.disabled}
                         onExpand={this.onExpand}
                         expandedKeys={[this.props.categoryId]}
                         autoExpandParent={this.state.autoExpandParent}
@@ -81,7 +82,7 @@ class CategoryList extends Component {
         return (
             <div>
                 <div>
-                    <Button type="primary" onClick={this.props.createCategory} disabled={this.props.editCategory} className="button">New</Button>
+                    <Button type="primary" htmlType="button" onClick={this.props.createCategory} disabled={this.props.disabled} className="button">New</Button>
                 </div>
                 loading tree
             </div>

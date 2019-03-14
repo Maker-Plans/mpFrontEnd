@@ -16,7 +16,6 @@ class Categories extends Component {
             createCategory: false,
             editCategory: false,
         };
-        console.log(this.state);
     }
 
     createCategory = () => {
@@ -24,7 +23,7 @@ class Categories extends Component {
             createCategory: true,
             editCategory: false,
         });
-    }
+    };
 
     editCategory = () => {
         this.setState({
@@ -78,7 +77,7 @@ class Categories extends Component {
                     <CategoryList
                         categoryId={categoryId}
                         createCategory={this.createCategory}
-                        editCategory={this.state.createCategory || this.state.editCategory} />
+                        disabled={this.state.createCategory || this.state.editCategory} />
                 </Sider>
                 <Content style={{ minHeight: 280 }}>
                     {this.DisplayOrEdit(categoryId)}

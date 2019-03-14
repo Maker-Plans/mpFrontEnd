@@ -11,6 +11,7 @@ function mapStateToProps(state) {
         return {
             categoryTree: denormalize(state.categories.result, CATEGORY_SCHEMA, state.categories.entities),
             categories: state.categories.entities,
+            articles: state.articles,
         };
     }
     return {};
@@ -20,12 +21,13 @@ class ArticleEditForm extends Component {
 
     constructor(props) {
         super(props);
-        if (props.article) {
+        if (props.articleId) {
+            const article = props.articles.articles[props.articleId];
             this.state = {
-                id: props.article.id,
-                name: props.article.name,
-                description: props.article.description,
-                categoryId: props.article.categoryId,
+                id: article.id,
+                name: article.name,
+                description: article.description,
+                categoryId: article.categoryId,
                 category: undefined,
             };
         } else {
@@ -33,7 +35,7 @@ class ArticleEditForm extends Component {
                 id: null,
                 name: '',
                 description: '',
-                categoryId: undefined,
+                categoryId: props.categoryId,
                 category: undefined,
             };
         }
@@ -52,24 +54,20 @@ class ArticleEditForm extends Component {
             });
         } else {
             this.props.addArticle({
-                id, name, description, categoryId,
+                name, description, categoryId,
             });
         }
         this.setState({});
-        this.props.cancelArticleEdit({
-            id, name, description, categoryId,
-        });
+        this.props.cancelEdit(categoryId, id);
     };
 
     handleCancelEdit = () => {
-        const { id, name, description, categoryId } = this.state;
+        const { id, categoryId } = this.state;
         this.setState({});
         if (id) {
-            this.props.cancelArticleEdit({
-                id, name, description, categoryId,
-            });
+            this.props.cancelEdit(categoryId, id);
         } else {
-            this.props.cancelArticleEdit(undefined);
+            this.props.cancelEdit(categoryId, undefined);
         }
     };
 
@@ -106,8 +104,8 @@ class ArticleEditForm extends Component {
             <div>
                 <form id="categoryForm" onSubmit={this.handleSubmit}>
                     <div className="toolbar">
-                        <Button type="default" onClick={this.handleCancelEdit} className="button">Cancel</Button>
-                        <Button type="primary" onClick={this.handleSubmit} className="button">Save</Button>
+                        <Button type="default" htmlType="button" onClick={this.handleCancelEdit} className="button">Cancel</Button>
+                        <Button type="primary" htmlType="button" onClick={this.handleSubmit} className="button">Save</Button>
                     </div>
                     <div className="section">
                         <h2>Article Details</h2>

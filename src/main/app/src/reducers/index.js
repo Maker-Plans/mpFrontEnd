@@ -4,10 +4,11 @@ import {
     , DELETE_CATEGORY
     , CATEGORY_DATA_LOADED
     , INVALID_INPUT
-    , API_CALL_FAILED,
+    , API_CALL_FAILED, ARTICLE_DATA_LOADED, LIKE_ARTICLE, ADD_ARTICLE, UPDATE_ARTICLE,
 } from '../constants/action-types';
 
 import { loadCategories, addCategory, updateCategory, deleteCategory } from './CategoryReducer';
+import { likeArticle, loadArticles, addArticle, updateArticle } from './ArticleReducer';
 
 const initialState = {
     categories: [],
@@ -26,6 +27,18 @@ function rootReducer(state = initialState, action) {
     }
     if (action.type === CATEGORY_DATA_LOADED) {
         return loadCategories(state, action);
+    }
+    if (action.type === ADD_ARTICLE) {
+        return addArticle(state, action);
+    }
+    if (action.type === UPDATE_ARTICLE) {
+        return updateArticle(state, action);
+    }
+    if (action.type === ARTICLE_DATA_LOADED) {
+        return loadArticles(state, action);
+    }
+    if (action.type === LIKE_ARTICLE) {
+        return likeArticle(state, action);
     }
     if (action.type === INVALID_INPUT) {
         return Object.assign({}, state, {
